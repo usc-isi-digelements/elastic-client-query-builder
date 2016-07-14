@@ -53,6 +53,40 @@
                 });
             });
 
+            suite('<elastic-client-query-builder> for match', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'match';
+                    component.field = 'testField';
+                    component.values = 'testValue';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('match');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('testValue');
+                });
+
+                test('match query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MatchQuery('testField', 'testValue').toJSON());
+                });
+            });
+
             suite('<elastic-client-query-builder> for term', function() {
                 var component;
 

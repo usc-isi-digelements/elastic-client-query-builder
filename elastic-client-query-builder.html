@@ -43,7 +43,7 @@ Example:
                     /**
                      * The type of query to build.
                      * Supported types:
-                     * match_all, term, terms
+                     * match_all, match, term, terms
                      */
                     type: {
                         type: String
@@ -70,22 +70,18 @@ Example:
                     else if(!values || (values.constructor === Array && !values.length)) {
                         this._setEjsQuery(null);
                     }
-                    else if(type === 'term') {
-                        this.buildTermQuery(field, values);
+                    else {
+                        var query = (values.constructor === Array && values.length === 1) ? values[0] : values;
+                        if(type === 'match') {
+                            this._setEjsQuery(ejs.MatchQuery(field, query));
+                        }
+                        if(type === 'term') {
+                            this._setEjsQuery(ejs.TermQuery(field, query));
+                        }
+                        if(type === 'terms') {
+                            this._setEjsQuery(ejs.TermsQuery(field, query));
+                        }
                     }
-                    else if(type === 'terms') {
-                        this.buildTermsQuery(field, values);
-                    }
-                },
-
-                buildTermQuery: function(field, values) {
-                    var term = (values.constructor === Array && values.length === 1) ? values[0] : values;
-                    this._setEjsQuery(ejs.TermQuery(field, term));
-                },
-
-                buildTermsQuery: function(field, values) {
-                    var terms = (values.constructor === Array && values.length === 1) ? values[0] : values;
-                    this._setEjsQuery(ejs.TermsQuery(field, terms));
                 }
             });
         })();
