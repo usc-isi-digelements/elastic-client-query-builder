@@ -1,0 +1,28 @@
+{
+  "name": "elastic-client-query-builder",
+  "version": "0.0.1",
+  "authors": [
+    "Next Century Corporation"
+  ],
+  "description": "",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "elastic-client-query-builder.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/DigElements/elastic-client-query-builder/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "dig-common": "DigElements/dig-common#^0.0.4"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  }
+}

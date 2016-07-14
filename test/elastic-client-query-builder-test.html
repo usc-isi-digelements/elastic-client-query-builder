@@ -1,0 +1,228 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+        <script src="../../web-component-tester/browser.js"></script>
+
+        <link rel="import" href="../elastic-client-query-builder.html">
+    </head>
+    <body>
+        <test-fixture id="elastic-client-query-builder-fixture">
+            <template>
+                <elastic-client-query-builder>
+                </elastic-client-query-builder>
+            </template>
+        </test-fixture>
+
+        <script>
+            suite('<elastic-client-query-builder> for match all', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'match_all';
+                    component.field = '';
+                    component.values = '';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('match_all');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('');
+                });
+
+                test('term query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for term', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'term';
+                    component.field = 'testField';
+                    component.values = 'testValue';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('term');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('testValue');
+                });
+
+                test('term query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for terms', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'terms';
+                    component.field = 'testField';
+                    component.values = 'testValue';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('terms');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('testValue');
+                });
+
+                test('term query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for terms array', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'terms';
+                    component.field = 'testField';
+                    component.values = ['testValue1', 'testValue2'];
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('terms');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.be.an('Array');
+                    expect(component.values).to.deep.equal(['testValue1', 'testValue2']);
+                });
+
+                test('terms query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', ['testValue1', 'testValue2']).toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for terms with one value', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'terms';
+                    component.field = 'testField';
+                    component.values = ['testValue'];
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('terms');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.be.an('Array');
+                    expect(component.values).to.deep.equal(['testValue']);
+                });
+
+                test('terms query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for no values', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'term';
+                    component.field = 'testField';
+                    component.values = '';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('term');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('');
+                });
+
+                test('query is not built', function() {
+                    expect(component.ejsQuery).to.be.null;
+                });
+            });
+        </script>
+    </body>
+</html>
