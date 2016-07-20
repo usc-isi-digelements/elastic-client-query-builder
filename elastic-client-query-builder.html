@@ -50,6 +50,24 @@ Example:
                     },
 
                     /**
+                     * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'field', and 'values'.
+                     */
+                    filtered: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /**
+                     * The elasticjs filter for a filtered query.  Only used if the filtered property is true.
+                     */
+                    ejsFilter: {
+                        type: Object,
+                        value: function() {
+                            return null;
+                        }
+                    },
+
+                    /**
                      * The built elasticjs query.
                      */
                     ejsQuery: {
@@ -60,27 +78,50 @@ Example:
                 },
 
                 observers : [
-                    'buildQuery(type, field, values)'
+                    'buildUnfilteredQuery(type, field, values, filtered)',
+                    'buildFilteredQuery(type, field, values, filtered, ejsFilter)'
                 ],
 
                 buildQuery: function(type, field, values) {
+                    var ejsQuery;
                     if(type === 'match_all') {
-                        this._setEjsQuery(ejs.MatchAllQuery());
+                        ejsQuery = ejs.MatchAllQuery();
                     }
                     else if(!values || (values.constructor === Array && !values.length)) {
                         this._setEjsQuery(null);
                     }
                     else {
-                        var query = (values.constructor === Array && values.length === 1) ? values[0] : values;
+                        var queryValue = (values.constructor === Array && values.length === 1) ? values[0] : values;
                         if(type === 'match') {
-                            this._setEjsQuery(ejs.MatchQuery(field, query));
+                            ejsQuery = ejs.MatchQuery(field, queryValue);
                         }
                         if(type === 'term') {
-                            this._setEjsQuery(ejs.TermQuery(field, query));
+                            ejsQuery = ejs.TermQuery(field, queryValue);
                         }
                         if(type === 'terms') {
-                            this._setEjsQuery(ejs.TermsQuery(field, query));
+                            ejsQuery = ejs.TermsQuery(field, queryValue);
                         }
+                    }
+                    return ejsQuery;
+                },
+
+                buildUnfilteredQuery: function(type, field, values, filtered) {
+                    if(filtered) {
+                        return;
+                    }
+                    var ejsQuery = this.buildQuery(type, field, values);
+                    if(ejsQuery) {
+                        this._setEjsQuery(ejsQuery);
+                    }
+                },
+
+                buildFilteredQuery: function(type, field, values, filtered, ejsFilter) {
+                    if(!filtered || !ejsFilter) {
+                        return;
+                    }
+                    var ejsQuery = this.buildQuery(type, field, values);
+                    if(ejsQuery) {
+                        this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
                     }
                 }
             });

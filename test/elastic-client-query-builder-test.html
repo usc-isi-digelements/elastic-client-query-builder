@@ -32,6 +32,11 @@
                     });
                 });
 
+                test('filtered is set correctly', function() {
+                    expect(component.filtered).to.exist;
+                    expect(component.filtered).to.be.false;
+                });
+
                 test('type is set correctly', function() {
                     expect(component.type).to.exist;
                     expect(component.type).to.equal('match_all');
@@ -66,6 +71,11 @@
                     });
                 });
 
+                test('filtered is set correctly', function() {
+                    expect(component.filtered).to.exist;
+                    expect(component.filtered).to.be.false;
+                });
+
                 test('type is set correctly', function() {
                     expect(component.type).to.exist;
                     expect(component.type).to.equal('match');
@@ -87,6 +97,58 @@
                 });
             });
 
+            suite('<elastic-client-query-builder> for filtered match', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.filtered = true;
+                    component.type = 'match';
+                    component.field = 'testField';
+                    component.values = 'testValue';
+                    flush(function() {
+                      done();
+                    });
+                });
+
+                test('filtered is set correctly', function() {
+                    expect(component.filtered).to.exist;
+                    expect(component.filtered).to.be.true;
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('match');
+                });
+
+                test('field is set correctly', function() {
+                    expect(component.field).to.exist;
+                    expect(component.field).to.equal('testField');
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('testValue');
+                });
+
+                test('filter is set correctly', function() {
+                    expect(component.ejsFilter).to.be.null;
+                });
+
+                test('query is not built if filter is not set', function() {
+                    expect(component.ejsQuery).to.be.undefined;
+                });
+
+                test('query is built once filter is set', function() {
+                    var ejsFilter = ejs.TermFilter('filterField', 'filterValue');
+                    component.ejsFilter = ejsFilter;
+                    expect(component.ejsFilter).to.exist;
+                    expect(component.ejsFilter.toJSON()).to.deep.equal(ejsFilter.toJSON());
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.FilteredQuery(ejs.MatchQuery('testField', 'testValue'), ejsFilter).toJSON());
+                });
+            });
+
             suite('<elastic-client-query-builder> for term', function() {
                 var component;
 
@@ -98,6 +160,11 @@
                     flush(function() {
                       done();
                     });
+                });
+
+                test('filtered is set correctly', function() {
+                    expect(component.filtered).to.exist;
+                    expect(component.filtered).to.be.false;
                 });
 
                 test('type is set correctly', function() {
@@ -132,6 +199,11 @@
                     flush(function() {
                       done();
                     });
+                });
+
+                test('filtered is set correctly', function() {
+                    expect(component.filtered).to.exist;
+                    expect(component.filtered).to.be.false;
                 });
 
                 test('type is set correctly', function() {
