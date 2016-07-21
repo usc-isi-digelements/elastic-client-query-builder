@@ -34,7 +34,7 @@ Example:
                     },
 
                     /**
-                     * The values for the query.
+                     * The string value or array of values for the query.
                      */
                     values: {
                         type: Array
@@ -68,6 +68,16 @@ Example:
                     },
 
                     /**
+                     * The array of elasticjs query objects to use with this elasticsearch bool query.  Only used if type is set to bool.
+                     */
+                    ejsBoolQueries: {
+                        type: Array,
+                        value: function() {
+                            return [];
+                        }
+                    },
+
+                    /**
                      * The built elasticjs query.
                      */
                     ejsQuery: {
@@ -79,7 +89,8 @@ Example:
 
                 observers : [
                     'buildUnfilteredQuery(type, field, values, filtered)',
-                    'buildFilteredQuery(type, field, values, filtered, ejsFilter)'
+                    'buildFilteredQuery(type, field, values, filtered, ejsFilter)',
+                    'buildBoolQuery(type, ejsBoolQueries)'
                 ],
 
                 buildQuery: function(type, field, values) {
@@ -122,6 +133,16 @@ Example:
                     var ejsQuery = this.buildQuery(type, field, values);
                     if(ejsQuery) {
                         this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
+                    }
+                },
+
+                buildBoolQuery: function(type, ejsBoolQueries) {
+                    if(type === 'bool' && ejsBoolQueries.length) {
+                        var ejsQuery = ejs.BoolQuery();
+                        ejsBoolQueries.forEach(function(query) {
+                            ejsQuery.must(query);
+                        });
+                        this._setEjsQuery(ejsQuery);
                     }
                 }
             });
