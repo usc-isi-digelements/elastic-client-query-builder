@@ -8,8 +8,8 @@ Example:
 
         <elastic-client-query-builder
             type: "terms"
-            field: "field"
-            values: "values"
+            fields: '"myField"'
+            values: '["value1","value2"]'
             ejs-query: "{{ejsQuery}}">
         </elastic-client-query-builder>
 
@@ -27,14 +27,14 @@ Example:
 
                 properties: {
                     /**
-                     * The field for the query.
+                     * The string field or array of fields for the query.
                     */
-                    field: {
-                        type: String
+                    fields: {
+                        type: Array
                     },
 
                     /**
-                     * The string value or array of values for the query.
+                     * The string value or array of values for the query.  For more-like-this queries, the value for the 'like' property.
                      */
                     values: {
                         type: Array
@@ -43,14 +43,14 @@ Example:
                     /**
                      * The type of query to build.
                      * Supported types:
-                     * match_all, match, term, terms
+                     * 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
                      */
                     type: {
                         type: String
                     },
 
                     /**
-                     * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'field', and 'values'.
+                     * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'fields', and 'values'.
                      */
                     filtered: {
                         type: Boolean,
@@ -78,6 +78,18 @@ Example:
                     },
 
                     /**
+                     * The object with properties for configuration options of mlt (more-like-this) queries.
+                     * Supported properties:
+                     * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer'
+                     */
+                    mltConfig: {
+                        type: Object,
+                        value: function() {
+                            return {};
+                        }
+                    },
+
+                    /**
                      * The built elasticjs query.
                      */
                     ejsQuery: {
@@ -88,12 +100,12 @@ Example:
                 },
 
                 observers : [
-                    'buildUnfilteredQuery(type, field, values, filtered)',
-                    'buildFilteredQuery(type, field, values, filtered, ejsFilter)',
+                    'buildUnfilteredQuery(type, fields, values, filtered)',
+                    'buildFilteredQuery(type, fields, values, filtered, ejsFilter)',
                     'buildBoolQuery(type, ejsBoolQueries)'
                 ],
 
-                buildQuery: function(type, field, values) {
+                buildQuery: function(type, fields, values) {
                     var ejsQuery;
                     if(type === 'match_all') {
                         ejsQuery = ejs.MatchAllQuery();
@@ -101,36 +113,65 @@ Example:
                     else if(!values || (values.constructor === Array && !values.length)) {
                         this._setEjsQuery(null);
                     }
-                    else {
+                    else if(fields) {
+                        var queryField = (fields.constructor === Array && fields.length === 1) ? fields[0] : fields;
                         var queryValue = (values.constructor === Array && values.length === 1) ? values[0] : values;
                         if(type === 'match') {
-                            ejsQuery = ejs.MatchQuery(field, queryValue);
+                            ejsQuery = ejs.MatchQuery(queryField, queryValue);
                         }
                         if(type === 'term') {
-                            ejsQuery = ejs.TermQuery(field, queryValue);
+                            ejsQuery = ejs.TermQuery(queryField, queryValue);
                         }
                         if(type === 'terms') {
-                            ejsQuery = ejs.TermsQuery(field, queryValue);
+                            ejsQuery = ejs.TermsQuery(queryField, queryValue);
+                        }
+                        if(type === 'mlt') {
+                            ejsQuery = this.buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), this.mltConfig);
                         }
                     }
                     return ejsQuery;
                 },
 
-                buildUnfilteredQuery: function(type, field, values, filtered) {
+                buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
+                    var mltQuery = ejsQuery;
+                    if(mltConfig) {
+                        if(mltConfig.minTermFreq) {
+                            mltQuery = mltQuery.minTermFreq(mltConfig.minTermFreq);
+                        }
+                        if(mltConfig.maxQueryTerms) {
+                            mltQuery = mltQuery.maxQueryTerms(mltConfig.maxQueryTerms);
+                        }
+                        if(mltConfig.stopWords) {
+                            mltQuery = mltQuery.stopWords(mltConfig.stopWords);
+                        }
+                        if(mltConfig.minDocFreq) {
+                            mltQuery = mltQuery.minDocFreq(mltConfig.minDocFreq);
+                        }
+                        if(mltConfig.maxDocFreq) {
+                            mltQuery = mltQuery.maxDocFreq(mltConfig.maxDocFreq);
+                        }
+                        if(mltConfig.analyzer) {
+                            mltQuery = mltQuery.analyzer(mltConfig.analyzer);
+                        }
+                    }
+                    return mltQuery;
+                },
+
+                buildUnfilteredQuery: function(type, fields, values, filtered) {
                     if(filtered) {
                         return;
                     }
-                    var ejsQuery = this.buildQuery(type, field, values);
+                    var ejsQuery = this.buildQuery(type, fields, values);
                     if(ejsQuery) {
                         this._setEjsQuery(ejsQuery);
                     }
                 },
 
-                buildFilteredQuery: function(type, field, values, filtered, ejsFilter) {
+                buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
                     if(!filtered || !ejsFilter) {
                         return;
                     }
-                    var ejsQuery = this.buildQuery(type, field, values);
+                    var ejsQuery = this.buildQuery(type, fields, values);
                     if(ejsQuery) {
                         this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
                     }

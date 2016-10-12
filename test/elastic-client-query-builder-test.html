@@ -25,10 +25,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'match_all';
-                    component.field = '';
+                    component.fields = '';
                     component.values = '';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -42,9 +42,9 @@
                     expect(component.type).to.equal('match_all');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('');
                 });
 
                 test('values is set correctly', function() {
@@ -64,10 +64,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'match';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = 'testValue';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -81,9 +81,9 @@
                     expect(component.type).to.equal('match');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -104,10 +104,10 @@
                     component = fixture('elastic-client-query-builder-fixture');
                     component.filtered = true;
                     component.type = 'match';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = 'testValue';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -121,9 +121,9 @@
                     expect(component.type).to.equal('match');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -155,10 +155,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'term';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = 'testValue';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -172,9 +172,9 @@
                     expect(component.type).to.equal('term');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -194,10 +194,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'terms';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = 'testValue';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -211,9 +211,9 @@
                     expect(component.type).to.equal('terms');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -233,10 +233,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'terms';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = ['testValue1', 'testValue2'];
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -245,9 +245,9 @@
                     expect(component.type).to.equal('terms');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -268,10 +268,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'terms';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = ['testValue'];
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -280,9 +280,9 @@
                     expect(component.type).to.equal('terms');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -304,7 +304,7 @@
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'bool';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -337,10 +337,10 @@
                 setup(function(done) {
                     component = fixture('elastic-client-query-builder-fixture');
                     component.type = 'term';
-                    component.field = 'testField';
+                    component.fields = 'testField';
                     component.values = '';
                     flush(function() {
-                      done();
+                        done();
                     });
                 });
 
@@ -349,9 +349,9 @@
                     expect(component.type).to.equal('term');
                 });
 
-                test('field is set correctly', function() {
-                    expect(component.field).to.exist;
-                    expect(component.field).to.equal('testField');
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.equal('testField');
                 });
 
                 test('values is set correctly', function() {
@@ -361,6 +361,107 @@
 
                 test('query is not built', function() {
                     expect(component.ejsQuery).to.be.null;
+                });
+            });
+
+            suite('<elastic-client-query-builder> for more-like-this query', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'mlt';
+                    component.fields = ['testField'];
+                    component.values = 'testValue';
+                    flush(function() {
+                        done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('mlt');
+                });
+
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.deep.equal(['testField']);
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.equal('testValue');
+                });
+
+                test('mltConfig is empty', function() {
+                    expect(component.mltConfig).to.deep.equal({});
+                });
+
+                test('more-like-this query is built correctly', function() {
+                    expect(component.ejsQuery).to.exist;
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MoreLikeThisQuery(['testField'], 'testValue').toJSON());
+                });
+            });
+
+            suite('<elastic-client-query-builder> for more-like-this query with config', function() {
+                var component;
+
+                setup(function(done) {
+                    component = fixture('elastic-client-query-builder-fixture');
+                    component.type = 'mlt';
+                    component.mltConfig = {
+                        minTermFreq: 2,
+                        maxQueryTerms: 50,
+                        stopWords: 'testStopWord',
+                        minDocFreq: 1,
+                        maxDocFreq: 100,
+                        analyzer: 'testAnalyzer'
+                    };
+                    component.fields = ['testField'];
+                    component.values = 'testValue';
+                    flush(function() {
+                        done();
+                    });
+                });
+
+                test('type is set correctly', function() {
+                    expect(component.type).to.exist;
+                    expect(component.type).to.equal('mlt');
+                });
+
+                test('fields is set correctly', function() {
+                    expect(component.fields).to.exist;
+                    expect(component.fields).to.deep.equal(['testField']);
+                });
+
+                test('values is set correctly', function() {
+                    expect(component.values).to.exist;
+                    expect(component.values).to.deep.equal('testValue');
+                });
+
+                test('mltConfig is set correctly', function() {
+                    expect(component.mltConfig).to.exist;
+                    expect(component.mltConfig).to.deep.equal({
+                        minTermFreq: 2,
+                        maxQueryTerms: 50,
+                        stopWords: 'testStopWord',
+                        minDocFreq: 1,
+                        maxDocFreq: 100,
+                        analyzer: 'testAnalyzer'
+                    });
+                });
+
+                test('more-like-this query is built correctly with config', function() {
+                    expect(component.ejsQuery).to.exist;
+                    var expected = ejs.MoreLikeThisQuery(['testField'], 'testValue')
+                        .minTermFreq(2)
+                        .maxQueryTerms(50)
+                        .stopWords('testStopWord')
+                        .minDocFreq(1)
+                        .maxDocFreq(100)
+                        .analyzer('testAnalyzer');
+                    console.log(JSON.stringify(expected.toJSON()));
+                    console.log(JSON.stringify(component.ejsQuery.toJSON()));
+                    expect(component.ejsQuery.toJSON()).to.deep.equal(expected.toJSON());
                 });
             });
         </script>
