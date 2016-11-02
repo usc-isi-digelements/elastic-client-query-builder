@@ -1,6 +1,6 @@
 {
   "name": "elastic-client-query-builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "authors": [
     "Next Century Corporation"
   ],
@@ -19,10 +19,13 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.2.0",
-    "dig-common": "DigElements/dig-common#^0.0.4"
+    "dig-common": "DigElements/dig-common#^0.0.5"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "web-component-tester": "^4.0.0"
+  },
+  "resolutions": {
+    "elastic.js": "6639a1030eb071fb762bcdd742fdbf037fb57b24"
   }
 }

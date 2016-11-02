@@ -414,7 +414,11 @@
                         stopWords: 'testStopWord',
                         minDocFreq: 1,
                         maxDocFreq: 100,
-                        analyzer: 'testAnalyzer'
+                        analyzer: 'testAnalyzer',
+                        minimumShouldMatch: '50%',
+                        boostTerms: 3,
+                        include: true,
+                        boost: 1.5
                     };
                     component.fields = ['testField'];
                     component.values = 'testValue';
@@ -446,7 +450,11 @@
                         stopWords: 'testStopWord',
                         minDocFreq: 1,
                         maxDocFreq: 100,
-                        analyzer: 'testAnalyzer'
+                        analyzer: 'testAnalyzer',
+                        minimumShouldMatch: '50%',
+                        boostTerms: 3,
+                        include: true,
+                        boost: 1.5
                     });
                 });
 
@@ -458,7 +466,11 @@
                         .stopWords('testStopWord')
                         .minDocFreq(1)
                         .maxDocFreq(100)
-                        .analyzer('testAnalyzer');
+                        .analyzer('testAnalyzer')
+                        .minimumShouldMatch('50%')
+                        .boostTerms(3)
+                        .include(true)
+                        .boost(1.5);
                     console.log(JSON.stringify(expected.toJSON()));
                     console.log(JSON.stringify(component.ejsQuery.toJSON()));
                     expect(component.ejsQuery.toJSON()).to.deep.equal(expected.toJSON());

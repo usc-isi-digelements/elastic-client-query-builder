@@ -80,7 +80,7 @@ Example:
                     /**
                      * The object with properties for configuration options of mlt (more-like-this) queries.
                      * Supported properties:
-                     * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer'
+                     * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer', 'minimumShouldMatch', 'boostTerms', 'include', 'boost'
                      */
                     mltConfig: {
                         type: Object,
@@ -152,6 +152,18 @@ Example:
                         }
                         if(mltConfig.analyzer) {
                             mltQuery = mltQuery.analyzer(mltConfig.analyzer);
+                        }
+                        if(mltConfig.minimumShouldMatch) {
+                            mltQuery = mltQuery.minimumShouldMatch(mltConfig.minimumShouldMatch);
+                        }
+                        if(mltConfig.boostTerms) {
+                            mltQuery = mltQuery.boostTerms(mltConfig.boostTerms);
+                        }
+                        if(mltConfig.include) {
+                            mltQuery = mltQuery.include(mltConfig.include);
+                        }
+                        if(mltConfig.boost) {
+                            mltQuery = mltQuery.boost(mltConfig.boost);
                         }
                     }
                     return mltQuery;
