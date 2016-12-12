@@ -56,6 +56,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for match', function() {
@@ -94,6 +98,10 @@
                 test('match query is built correctly', function() {
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MatchQuery('testField', 'testValue').toJSON());
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
                 });
             });
 
@@ -147,6 +155,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.FilteredQuery(ejs.MatchQuery('testField', 'testValue'), ejsFilter).toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for term', function() {
@@ -186,6 +198,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for terms', function() {
@@ -221,9 +237,13 @@
                     expect(component.values).to.equal('testValue');
                 });
 
-                test('term query is built correctly', function() {
+                test('terms query is built correctly', function() {
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
                 });
             });
 
@@ -260,6 +280,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', ['testValue1', 'testValue2']).toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for terms with one value', function() {
@@ -295,6 +319,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for bool', function() {
@@ -329,6 +357,10 @@
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
                 });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
+                });
             });
 
             suite('<elastic-client-query-builder> for no values', function() {
@@ -361,6 +393,10 @@
 
                 test('query is not built', function() {
                     expect(component.ejsQuery).to.be.null;
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
                 });
             });
 
@@ -399,6 +435,10 @@
                 test('more-like-this query is built correctly', function() {
                     expect(component.ejsQuery).to.exist;
                     expect(component.ejsQuery.toJSON()).to.deep.equal(ejs.MoreLikeThisQuery(['testField'], 'testValue').toJSON());
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
                 });
             });
 
@@ -471,9 +511,11 @@
                         .boostTerms(3)
                         .include(true)
                         .boost(1.5);
-                    console.log(JSON.stringify(expected.toJSON()));
-                    console.log(JSON.stringify(component.ejsQuery.toJSON()));
                     expect(component.ejsQuery.toJSON()).to.deep.equal(expected.toJSON());
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(component.root).children.length).to.equal(0);
                 });
             });
         </script>
