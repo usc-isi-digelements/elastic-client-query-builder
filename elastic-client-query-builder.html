@@ -1,17 +1,18 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../dig-common/dig-common.html">
+<script src="../elastic.js/dist/elastic.js"></script>
 
 <!--
-An element which builds an elasticjs query based on the set attributes.
+A Polymer Element which builds an elasticjs query based on the set attributes.
 
-Example:
-
-        <elastic-client-query-builder
-            type: "terms"
-            fields: '"myField"'
-            values: '["value1","value2"]'
-            ejs-query: "{{ejsQuery}}">
-        </elastic-client-query-builder>
+### Example
+```html
+<elastic-client-query-builder
+  type: "terms"
+  fields: '"myField"'
+  values: '["value1","value2"]'
+  ejs-query: "{{ejsQuery}}">
+</elastic-client-query-builder>
+```
 
 @demo demo/index.html
 -->
@@ -27,30 +28,47 @@ Example:
 
                 properties: {
                     /**
+                     * (Required)
+                     *
                      * The string field or array of fields for the query.
-                    */
+                     *
+                     * @type {String|Array}
+                     */
                     fields: {
                         type: Array
                     },
 
                     /**
+                     * (Required)
+                     *
                      * The string value or array of values for the query.  For more-like-this queries, the value for the 'like' property.
+                     *
+                     * @type {String|Array}
                      */
                     values: {
                         type: Array
                     },
 
                     /**
+                     * (Required)
+                     *
                      * The type of query to build.
                      * Supported types:
                      * 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
+                     *
+                     * @type {String}
                      */
                     type: {
                         type: String
                     },
 
                     /**
+                     * (Optional)
+                     *
                      * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'fields', and 'values'.
+                     *
+                     * @type {Boolean}
+                     * @default false
                      */
                     filtered: {
                         type: Boolean,
@@ -58,7 +76,12 @@ Example:
                     },
 
                     /**
+                     * (Optional)
+                     *
                      * The elasticjs filter for a filtered query.  Only used if the filtered property is true.
+                     *
+                     * @type {Object}
+                     * @default null
                      */
                     ejsFilter: {
                         type: Object,
@@ -68,7 +91,12 @@ Example:
                     },
 
                     /**
+                     * (Optional)
+                     *
                      * The array of elasticjs query objects to use with this elasticsearch bool query.  Only used if type is set to bool.
+                     *
+                     * @type {Array}
+                     * @default []
                      */
                     ejsBoolQueries: {
                         type: Array,
@@ -78,9 +106,14 @@ Example:
                     },
 
                     /**
+                     * (Optional)
+                     *
                      * The object with properties for configuration options of mlt (more-like-this) queries.
                      * Supported properties:
                      * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer', 'minimumShouldMatch', 'boostTerms', 'include', 'boost'
+                     *
+                     * @type {Object}
+                     * @default {}
                      */
                     mltConfig: {
                         type: Object,
@@ -90,7 +123,11 @@ Example:
                     },
 
                     /**
+                     * (Output)
+                     *
                      * The built elasticjs query.
+                     *
+                     * @type {Object}
                      */
                     ejsQuery: {
                         type: Object,
@@ -105,6 +142,14 @@ Example:
                     'buildBoolQuery(type, ejsBoolQueries)'
                 ],
 
+                /**
+                 * Builds and returns an elasticjs query object using the given type, fields, and values.
+                 *
+                 * @param {String} type
+                 * @param {String|Array} fields
+                 * @param {String|Array} values
+                 * @return {Object}
+                 */
                 buildQuery: function(type, fields, values) {
                     var ejsQuery;
                     if(type === 'match_all') {
@@ -132,6 +177,13 @@ Example:
                     return ejsQuery;
                 },
 
+                /**
+                 * Builds and returns a more-like-this elasticjs query object using the given elasticjs query object and more-like-this configuration object.
+                 *
+                 * @param {Object} ejsQuery
+                 * @param {Object} mltConfig
+                 * @return {Object}
+                 */
                 buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
                     var mltQuery = ejsQuery;
                     if(mltConfig) {
@@ -169,6 +221,14 @@ Example:
                     return mltQuery;
                 },
 
+                /**
+                 * Builds and sets the elasticjs query object for an unfiltered query.
+                 *
+                 * @param {String} type
+                 * @param {String|Array} fields
+                 * @param {String|Array} values
+                 * @param {Boolean} filtered
+                 */
                 buildUnfilteredQuery: function(type, fields, values, filtered) {
                     if(filtered) {
                         return;
@@ -179,6 +239,15 @@ Example:
                     }
                 },
 
+                /**
+                 * Builds and sets the elasticjs query object for a filtered query.
+                 *
+                 * @param {String} type
+                 * @param {String|Array} fields
+                 * @param {String|Array} values
+                 * @param {Boolean} filtered
+                 * @param {Object} ejsFilter
+                 */
                 buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
                     if(!filtered || !ejsFilter) {
                         return;
@@ -189,6 +258,12 @@ Example:
                     }
                 },
 
+                /**
+                 * Builds and sets the elasticjs query object for a bool query.
+                 *
+                 * @param {String} type
+                 * @param {Array} ejsBoolQueries
+                 */
                 buildBoolQuery: function(type, ejsBoolQueries) {
                     if(type === 'bool' && ejsBoolQueries.length) {
                         var ejsQuery = ejs.BoolQuery();
