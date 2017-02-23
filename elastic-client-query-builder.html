@@ -23,10 +23,10 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
 ### Example
 ```html
 <elastic-client-query-builder
-  type: "terms"
-  fields: '"myField"'
-  values: '["value1","value2"]'
-  ejs-query: "{{ejsQuery}}">
+  type="terms"
+  fields='"myField"'
+  values='["value1","value2"]'
+  ejs-query="{{ejsQuery}}">
 </elastic-client-query-builder>
 ```
 
@@ -153,9 +153,9 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                 },
 
                 observers : [
-                    'buildUnfilteredQuery(type, fields, values, filtered)',
-                    'buildFilteredQuery(type, fields, values, filtered, ejsFilter)',
-                    'buildBoolQuery(type, ejsBoolQueries)'
+                    '_buildUnfilteredQuery(type, fields, values, filtered)',
+                    '_buildFilteredQuery(type, fields, values, filtered, ejsFilter)',
+                    '_buildBoolQuery(type, ejsBoolQueries)'
                 ],
 
                 /**
@@ -187,7 +187,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                             ejsQuery = ejs.TermsQuery(queryField, queryValue);
                         }
                         if(type === 'mlt') {
-                            ejsQuery = this.buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), this.mltConfig);
+                            ejsQuery = this._buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), this.mltConfig);
                         }
                     }
                     return ejsQuery;
@@ -200,7 +200,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {Object} mltConfig
                  * @return {Object}
                  */
-                buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
+                _buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
                     var mltQuery = ejsQuery;
                     if(mltConfig) {
                         if(mltConfig.minTermFreq) {
@@ -245,7 +245,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {String|Array} values
                  * @param {Boolean} filtered
                  */
-                buildUnfilteredQuery: function(type, fields, values, filtered) {
+                _buildUnfilteredQuery: function(type, fields, values, filtered) {
                     if(filtered) {
                         return;
                     }
@@ -264,7 +264,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {Boolean} filtered
                  * @param {Object} ejsFilter
                  */
-                buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
+                _buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
                     if(!filtered || !ejsFilter) {
                         return;
                     }
@@ -280,7 +280,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {String} type
                  * @param {Array} ejsBoolQueries
                  */
-                buildBoolQuery: function(type, ejsBoolQueries) {
+                _buildBoolQuery: function(type, ejsBoolQueries) {
                     if(type === 'bool' && ejsBoolQueries.length) {
                         var ejsQuery = ejs.BoolQuery();
                         ejsBoolQueries.forEach(function(query) {
