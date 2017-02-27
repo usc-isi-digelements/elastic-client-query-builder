@@ -337,7 +337,7 @@ limitations under the License.
                 });
             });
 
-            suite('<elastic-client-query-builder> for bool', function() {
+            suite('<elastic-client-query-builder> for bool with must clauses', function() {
                 var element;
 
                 setup(function(done) {
@@ -348,9 +348,11 @@ limitations under the License.
                     });
                 });
 
-                test('type is set correctly', function() {
+                test('type and boolFunction are set correctly', function() {
                     expect(element.type).to.exist;
                     expect(element.type).to.equal('bool');
+                    expect(element.boolFunction).to.exist;
+                    expect(element.boolFunction).to.equal('must');
                 });
 
                 test('query is not built if bool queries are not set', function() {
@@ -383,6 +385,62 @@ limitations under the License.
                     expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
                     expect(element.ejsQuery).to.exist;
                     expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
+                });
+
+                test('does not have html content', function() {
+                    expect(Polymer.dom(element.root).children.length).to.equal(0);
+                });
+            });
+
+            suite('<elastic-client-query-builder> for bool with should clauses', function() {
+                var element;
+
+                setup(function(done) {
+                    element = fixture('elastic-client-query-builder-fixture');
+                    element.type = 'bool';
+                    element.boolFunction = 'should';
+                    flush(function() {
+                        done();
+                    });
+                });
+
+                test('type and boolFunction are set correctly', function() {
+                    expect(element.type).to.exist;
+                    expect(element.type).to.equal('bool');
+                    expect(element.boolFunction).to.exist;
+                    expect(element.boolFunction).to.equal('should');
+                });
+
+                test('query is not built if bool queries are not set', function() {
+                    expect(element.ejsQuery).to.not.exist;
+                });
+
+                test('query is built once bool queries are set', function() {
+                    var query1 = ejs.TermQuery('field1', 'value1');
+                    var query2 = ejs.TermQuery('field2', 'value2');
+                    element.ejsBoolQueries = [query1, query2];
+                    expect(element.ejsBoolQueries).to.exist;
+                    expect(element.ejsBoolQueries).to.be.an('Array');
+                    expect(element.ejsBoolQueries.length).to.equal(2);
+                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+                    expect(element.ejsQuery).to.exist;
+                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
+                });
+
+                test('query does not use fields or values properties', function() {
+                    var query1 = ejs.TermQuery('field1', 'value1');
+                    var query2 = ejs.TermQuery('field2', 'value2');
+                    element.fields = ['field3', 'field4'];
+                    element.values = ['value3', 'value4'];
+                    element.ejsBoolQueries = [query1, query2];
+                    expect(element.ejsBoolQueries).to.exist;
+                    expect(element.ejsBoolQueries).to.be.an('Array');
+                    expect(element.ejsBoolQueries.length).to.equal(2);
+                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+                    expect(element.ejsQuery).to.exist;
+                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
                 });
 
                 test('does not have html content', function() {
@@ -424,6 +482,12 @@ limitations under the License.
 
                 test('does not have html content', function() {
                     expect(Polymer.dom(element.root).children.length).to.equal(0);
+                });
+
+                test('setting values does build query', function() {
+                    element.values = 'testValue';
+                    expect(element.ejsQuery).to.exist;
+                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
                 });
             });
 

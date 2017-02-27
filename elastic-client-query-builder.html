@@ -70,7 +70,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                      *
                      * The type of query to build.
                      * Supported types:
-                     * 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
+                     * 'bool', 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
                      *
                      * @type {String}
                      */
@@ -119,6 +119,18 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                         value: function() {
                             return [];
                         }
+                    },
+
+                    /**
+                     * (Optional)
+                     * Whether the bool query either 'must' or 'should' match the given queries.  Only used if type is set to bool.
+                     *
+                     * @type {String}
+                     * @default 'must'
+                     */
+                    boolFunction: {
+                        type: String,
+                        value: 'must'
                     },
 
                     /**
@@ -282,10 +294,20 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  */
                 _buildBoolQuery: function(type, ejsBoolQueries) {
                     if(type === 'bool' && ejsBoolQueries.length) {
-                        var ejsQuery = ejs.BoolQuery();
+                        var ejsQuery = ejs.BoolQuery()
+                        if(this.boolFunction === 'should') {
+                            ejsQuery.minimumNumberShouldMatch(1);
+                        }
+
+                        var self = this;
                         ejsBoolQueries.forEach(function(query) {
-                            ejsQuery.must(query);
+                            if(self.boolFunction === 'should') {
+                                ejsQuery.should(query);
+                            } else {
+                                ejsQuery.must(query);
+                            }
                         });
+
                         this._setEjsQuery(ejsQuery);
                     }
                 }
