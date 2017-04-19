@@ -214,7 +214,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  */
                 buildBoolQuery: function(ejsBoolQueries, boolFunction) {
                     if(ejsBoolQueries.length) {
-                        var ejsQuery = ejs.BoolQuery()
+                        var ejsQuery = ejs.BoolQuery();
                         if(boolFunction === 'should') {
                             ejsQuery.minimumNumberShouldMatch(1);
                         }
@@ -226,6 +226,32 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                                 ejsQuery.must(query);
                             }
                         });
+
+                        return ejsQuery;
+                    }
+
+                    return null;
+                },
+
+                /**
+                 * Builds and returns the elasticjs query object for a date range query.
+                 *
+                 * @param {String} field
+                 * @param {String} greaterThan
+                 * @param {String} lessThan
+                 * @return {Object}
+                 */
+                buildDateRangeQuery: function(field, greaterThan, lessThan) {
+                    if(field) {
+                        var ejsQuery = ejs.RangeQuery(field);
+
+                        if(greaterThan) {
+                            ejsQuery.gte(greaterThan);
+                        }
+
+                        if(lessThan) {
+                            ejsQuery.gte(lessThan);
+                        }
 
                         return ejsQuery;
                     }
