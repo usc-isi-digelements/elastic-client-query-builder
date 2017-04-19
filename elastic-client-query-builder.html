@@ -206,11 +206,40 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                 },
 
                 /**
+                 * Builds and returns the elasticjs query object for a bool query.
+                 *
+                 * @param {Array} ejsBoolQueries
+                 * @param {String} boolFunction
+                 * @return {Object}
+                 */
+                buildBoolQuery: function(ejsBoolQueries, boolFunction) {
+                    if(ejsBoolQueries.length) {
+                        var ejsQuery = ejs.BoolQuery()
+                        if(boolFunction === 'should') {
+                            ejsQuery.minimumNumberShouldMatch(1);
+                        }
+
+                        ejsBoolQueries.forEach(function(query) {
+                            if(boolFunction === 'should') {
+                                ejsQuery.should(query);
+                            } else if(boolFunction === 'must') {
+                                ejsQuery.must(query);
+                            }
+                        });
+
+                        return ejsQuery;
+                    }
+
+                    return null;
+                },
+
+                /**
                  * Builds and returns a more-like-this elasticjs query object using the given elasticjs query object and more-like-this configuration object.
                  *
                  * @param {Object} ejsQuery
                  * @param {Object} mltConfig
                  * @return {Object}
+                 * @private
                  */
                 _buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
                     var mltQuery = ejsQuery;
@@ -256,6 +285,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {String|Array} fields
                  * @param {String|Array} values
                  * @param {Boolean} filtered
+                 * @private
                  */
                 _buildUnfilteredQuery: function(type, fields, values, filtered) {
                     if(filtered) {
@@ -275,6 +305,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {String|Array} values
                  * @param {Boolean} filtered
                  * @param {Object} ejsFilter
+                 * @private
                  */
                 _buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
                     if(!filtered || !ejsFilter) {
@@ -291,22 +322,11 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  *
                  * @param {String} type
                  * @param {Array} ejsBoolQueries
+                 * @private
                  */
                 _buildBoolQuery: function(type, ejsBoolQueries) {
-                    if(type === 'bool' && ejsBoolQueries.length) {
-                        var ejsQuery = ejs.BoolQuery()
-                        if(this.boolFunction === 'should') {
-                            ejsQuery.minimumNumberShouldMatch(1);
-                        }
-
-                        var self = this;
-                        ejsBoolQueries.forEach(function(query) {
-                            if(self.boolFunction === 'should') {
-                                ejsQuery.should(query);
-                            } else {
-                                ejsQuery.must(query);
-                            }
-                        });
+                    if(type === 'bool') {
+                        var ejsQuery = this.buildBoolQuery(ejsBoolQueries, this.boolFunction);
 
                         this._setEjsQuery(ejsQuery);
                     }
