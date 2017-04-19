@@ -176,15 +176,16 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * @param {String} type
                  * @param {String|Array} fields
                  * @param {String|Array} values
+                 * @param {Object} mltConfig
                  * @return {Object}
                  */
-                buildQuery: function(type, fields, values) {
+                buildQuery: function(type, fields, values, mltConfig) {
                     var ejsQuery;
                     if(type === 'match_all') {
                         ejsQuery = ejs.MatchAllQuery();
                     }
                     else if(!values || (values.constructor === Array && !values.length)) {
-                        this._setEjsQuery(null);
+                        return null;
                     }
                     else if(fields) {
                         var queryField = (fields.constructor === Array && fields.length === 1) ? fields[0] : fields;
@@ -199,7 +200,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                             ejsQuery = ejs.TermsQuery(queryField, queryValue);
                         }
                         if(type === 'mlt') {
-                            ejsQuery = this._buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), this.mltConfig);
+                            ejsQuery = this._buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), mltConfig);
                         }
                     }
                     return ejsQuery;
@@ -209,11 +210,11 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * Builds and returns the elasticjs query object for a bool query.
                  *
                  * @param {Array} ejsBoolQueries
-                 * @param {String} boolFunction
+                 * @param {String} boolFunction Either 'must' or 'should' or undefined (defaults to 'must')
                  * @return {Object}
                  */
                 buildBoolQuery: function(ejsBoolQueries, boolFunction) {
-                    if(ejsBoolQueries.length) {
+                    if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'should' || !boolFunction)) {
                         var ejsQuery = ejs.BoolQuery();
                         if(boolFunction === 'should') {
                             ejsQuery.minimumNumberShouldMatch(1);
@@ -222,7 +223,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                         ejsBoolQueries.forEach(function(query) {
                             if(boolFunction === 'should') {
                                 ejsQuery.should(query);
-                            } else if(boolFunction === 'must') {
+                            } else {
                                 ejsQuery.must(query);
                             }
                         });
@@ -237,20 +238,19 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                  * Builds and returns the elasticjs query object for a date range query.
                  *
                  * @param {String} field
-                 * @param {String} greaterThan
-                 * @param {String} lessThan
+                 * @param {Object} config Object with 'greater' and/or 'less' property
                  * @return {Object}
                  */
-                buildDateRangeQuery: function(field, greaterThan, lessThan) {
+                buildDateRangeQuery: function(field, config) {
                     if(field) {
                         var ejsQuery = ejs.RangeQuery(field);
 
-                        if(greaterThan) {
-                            ejsQuery.gte(greaterThan);
+                        if(config.greater) {
+                            ejsQuery.gte(config.greater);
                         }
 
-                        if(lessThan) {
-                            ejsQuery.gte(lessThan);
+                        if(config.less) {
+                            ejsQuery.lte(config.less);
                         }
 
                         return ejsQuery;
@@ -317,8 +317,8 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                     if(filtered) {
                         return;
                     }
-                    var ejsQuery = this.buildQuery(type, fields, values);
-                    if(ejsQuery) {
+                    var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
+                    if(ejsQuery || ejsQuery === null) {
                         this._setEjsQuery(ejsQuery);
                     }
                 },
@@ -337,9 +337,12 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
                     if(!filtered || !ejsFilter) {
                         return;
                     }
-                    var ejsQuery = this.buildQuery(type, fields, values);
+                    var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
                     if(ejsQuery) {
                         this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
+                    }
+                    if(ejsQuery === null) {
+                        this._setEjsQuery(null);
                     }
                 },
 
