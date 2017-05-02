@@ -15,37 +15,37 @@ limitations under the License.
 -->
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-        <title>elastic-client-query-builder Demo</title>
-        <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-        <link rel="import" href="../elastic-client-query-builder.html">
-    </head>
-    <body unresolved>
-        <template is="dom-bind" id="demo">
-            <p>Field: 'myField'</p>
-            <p>Value: 'myValue'</p>
-            <p>Type: 'terms'</p>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>elastic-client-query-builder Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../elastic-client-query-builder.html">
+  </head>
+  <body unresolved>
+    <template is="dom-bind" id="demo">
+      <p>Field: 'myField'</p>
+      <p>Value: 'myValue'</p>
+      <p>Type: 'terms'</p>
 
-            <elastic-client-query-builder
-                fields='"myField"'
-                values='"myValue"'
-                type="term"
-                ejs-query="{{query}}">
-            </elastic-client-query-builder>
+      <elastic-client-query-builder
+        fields='"myField"'
+        values='"myValue"'
+        type="term"
+        ejs-query="{{query}}">
+      </elastic-client-query-builder>
 
-            <p><span>ElasticJS query: </span>{{toJSON(query)}}</p>
-        </template>
+      <p><span>ElasticJS query: </span>{{toJSON(query)}}</p>
+    </template>
 
-        <script>
-            (function(document) {
-                var demo = document.querySelector('#demo');
+    <script>
+      (function(document) {
+        var demo = document.querySelector('#demo');
 
-                demo.toJSON = function(ejs) {
-                    return JSON.stringify(ejs);
-                }
-            })(document);
-        </script>
-    </body>
+        demo.toJSON = function(ejs) {
+          return JSON.stringify(ejs);
+        };
+      })(document);
+    </script>
+  </body>
 </html>

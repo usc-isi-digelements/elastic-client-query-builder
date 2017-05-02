@@ -15,693 +15,693 @@ limitations under the License.
 -->
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-        <script src="../../web-component-tester/browser.js"></script>
-        <link rel="import" href="../elastic-client-query-builder.html">
-    </head>
-    <body>
-        <test-fixture id="elastic-client-query-builder-fixture">
-            <template>
-                <elastic-client-query-builder>
-                </elastic-client-query-builder>
-            </template>
-        </test-fixture>
-
-        <script>
-            suite('<elastic-client-query-builder> for match all', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'match_all';
-                    element.fields = '';
-                    element.values = '';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('filtered is set correctly', function() {
-                    expect(element.filtered).to.exist;
-                    expect(element.filtered).to.be.false;
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('match_all');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('');
-                });
-
-                test('term query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for match', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'match';
-                    element.fields = 'testField';
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('filtered is set correctly', function() {
-                    expect(element.filtered).to.exist;
-                    expect(element.filtered).to.be.false;
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('match');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('testValue');
-                });
-
-                test('match query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MatchQuery('testField', 'testValue').toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for filtered match', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.filtered = true;
-                    element.type = 'match';
-                    element.fields = 'testField';
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('filtered is set correctly', function() {
-                    expect(element.filtered).to.exist;
-                    expect(element.filtered).to.be.true;
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('match');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('testValue');
-                });
-
-                test('filter is set correctly', function() {
-                    expect(element.ejsFilter).to.be.null;
-                });
-
-                test('query is not built if filter is not set', function() {
-                    expect(element.ejsQuery).to.not.exist;
-                });
-
-                test('query is built once filter is set', function() {
-                    var ejsFilter = ejs.TermFilter('filterField', 'filterValue');
-                    element.ejsFilter = ejsFilter;
-                    expect(element.ejsFilter).to.exist;
-                    expect(element.ejsFilter.toJSON()).to.deep.equal(ejsFilter.toJSON());
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.FilteredQuery(ejs.MatchQuery('testField', 'testValue'), ejsFilter).toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for term', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'term';
-                    element.fields = 'testField';
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('filtered is set correctly', function() {
-                    expect(element.filtered).to.exist;
-                    expect(element.filtered).to.be.false;
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('term');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('testValue');
-                });
-
-                test('term query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for terms', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'terms';
-                    element.fields = 'testField';
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('filtered is set correctly', function() {
-                    expect(element.filtered).to.exist;
-                    expect(element.filtered).to.be.false;
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('terms');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('testValue');
-                });
-
-                test('terms query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for terms array', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'terms';
-                    element.fields = 'testField';
-                    element.values = ['testValue1', 'testValue2'];
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('terms');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.be.an('Array');
-                    expect(element.values).to.deep.equal(['testValue1', 'testValue2']);
-                });
-
-                test('terms query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', ['testValue1', 'testValue2']).toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for terms with one value', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'terms';
-                    element.fields = 'testField';
-                    element.values = ['testValue'];
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('terms');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.be.an('Array');
-                    expect(element.values).to.deep.equal(['testValue']);
-                });
-
-                test('terms query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for bool with must clauses', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'bool';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type and boolFunction are set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('bool');
-                    expect(element.boolFunction).to.exist;
-                    expect(element.boolFunction).to.equal('must');
-                });
-
-                test('query is not built if bool queries are not set', function() {
-                    expect(element.ejsQuery).to.not.exist;
-                });
-
-                test('query is built once bool queries are set', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    element.ejsBoolQueries = [query1, query2];
-                    expect(element.ejsBoolQueries).to.exist;
-                    expect(element.ejsBoolQueries).to.be.an('Array');
-                    expect(element.ejsBoolQueries.length).to.equal(2);
-                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
-                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
-                });
-
-                test('query does not use fields or values properties', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    element.fields = ['field3', 'field4'];
-                    element.values = ['value3', 'value4'];
-                    element.ejsBoolQueries = [query1, query2];
-                    expect(element.ejsBoolQueries).to.exist;
-                    expect(element.ejsBoolQueries).to.be.an('Array');
-                    expect(element.ejsBoolQueries.length).to.equal(2);
-                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
-                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for bool with should clauses', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'bool';
-                    element.boolFunction = 'should';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type and boolFunction are set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('bool');
-                    expect(element.boolFunction).to.exist;
-                    expect(element.boolFunction).to.equal('should');
-                });
-
-                test('query is not built if bool queries are not set', function() {
-                    expect(element.ejsQuery).to.not.exist;
-                });
-
-                test('query is built once bool queries are set', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    element.ejsBoolQueries = [query1, query2];
-                    expect(element.ejsBoolQueries).to.exist;
-                    expect(element.ejsBoolQueries).to.be.an('Array');
-                    expect(element.ejsBoolQueries.length).to.equal(2);
-                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
-                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
-                });
-
-                test('query does not use fields or values properties', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    element.fields = ['field3', 'field4'];
-                    element.values = ['value3', 'value4'];
-                    element.ejsBoolQueries = [query1, query2];
-                    expect(element.ejsBoolQueries).to.exist;
-                    expect(element.ejsBoolQueries).to.be.an('Array');
-                    expect(element.ejsBoolQueries.length).to.equal(2);
-                    expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
-                    expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for no values', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'term';
-                    element.fields = 'testField';
-                    element.values = '';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('term');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.equal('testField');
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('');
-                });
-
-                test('query is not built', function() {
-                    expect(element.ejsQuery).to.be.null;
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-
-                test('setting values does build query', function() {
-                    element.values = 'testValue';
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
-                });
-            });
-
-            suite('<elastic-client-query-builder> for more-like-this query', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'mlt';
-                    element.fields = ['testField'];
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('mlt');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.deep.equal(['testField']);
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.equal('testValue');
-                });
-
-                test('mltConfig is empty', function() {
-                    expect(element.mltConfig).to.deep.equal({});
-                });
-
-                test('more-like-this query is built correctly', function() {
-                    expect(element.ejsQuery).to.exist;
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MoreLikeThisQuery(['testField'], 'testValue').toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> for more-like-this query with config', function() {
-                var element;
-
-                setup(function(done) {
-                    element = fixture('elastic-client-query-builder-fixture');
-                    element.type = 'mlt';
-                    element.mltConfig = {
-                        minTermFreq: 2,
-                        maxQueryTerms: 50,
-                        stopWords: 'testStopWord',
-                        minDocFreq: 1,
-                        maxDocFreq: 100,
-                        analyzer: 'testAnalyzer',
-                        minimumShouldMatch: '50%',
-                        boostTerms: 3,
-                        include: true,
-                        boost: 1.5
-                    };
-                    element.fields = ['testField'];
-                    element.values = 'testValue';
-                    flush(function() {
-                        done();
-                    });
-                });
-
-                test('type is set correctly', function() {
-                    expect(element.type).to.exist;
-                    expect(element.type).to.equal('mlt');
-                });
-
-                test('fields is set correctly', function() {
-                    expect(element.fields).to.exist;
-                    expect(element.fields).to.deep.equal(['testField']);
-                });
-
-                test('values is set correctly', function() {
-                    expect(element.values).to.exist;
-                    expect(element.values).to.deep.equal('testValue');
-                });
-
-                test('mltConfig is set correctly', function() {
-                    expect(element.mltConfig).to.exist;
-                    expect(element.mltConfig).to.deep.equal({
-                        minTermFreq: 2,
-                        maxQueryTerms: 50,
-                        stopWords: 'testStopWord',
-                        minDocFreq: 1,
-                        maxDocFreq: 100,
-                        analyzer: 'testAnalyzer',
-                        minimumShouldMatch: '50%',
-                        boostTerms: 3,
-                        include: true,
-                        boost: 1.5
-                    });
-                });
-
-                test('more-like-this query is built correctly with config', function() {
-                    expect(element.ejsQuery).to.exist;
-                    var expected = ejs.MoreLikeThisQuery(['testField'], 'testValue')
-                        .minTermFreq(2)
-                        .maxQueryTerms(50)
-                        .stopWords('testStopWord')
-                        .minDocFreq(1)
-                        .maxDocFreq(100)
-                        .analyzer('testAnalyzer')
-                        .minimumShouldMatch('50%')
-                        .boostTerms(3)
-                        .include(true)
-                        .boost(1.5);
-                    expect(element.ejsQuery.toJSON()).to.deep.equal(expected.toJSON());
-                });
-
-                test('does not have html content', function() {
-                    expect(Polymer.dom(element.root).children.length).to.equal(0);
-                });
-            });
-
-            suite('<elastic-client-query-builder> public function tests', function() {
-                var element;
-
-                setup(function() {
-                    element = fixture('elastic-client-query-builder-fixture');
-                });
-
-                test('buildQuery does exist', function() {
-                    expect(element.buildQuery).to.be.a('Function');
-                });
-
-                test('buildQuery does return match all query', function() {
-                    expect(element.buildQuery('match_all').toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
-                });
-
-                test('buildQuery does return null if type is not match all and fields are undefined', function() {
-                    expect(element.buildQuery('match')).to.be.null;
-                });
-
-                test('buildQuery does return null if type is not match all and values are undefined', function() {
-                    expect(element.buildQuery('match', 'field')).to.be.null;
-                });
-
-                test('buildQuery does return match query', function() {
-                    expect(element.buildQuery('match', 'field', 'value').toJSON()).to.deep.equal(ejs.MatchQuery('field', 'value').toJSON());
-                });
-
-                test('buildQuery does return term query', function() {
-                    expect(element.buildQuery('term', 'field', 'value').toJSON()).to.deep.equal(ejs.TermQuery('field', 'value').toJSON());
-                });
-
-                test('buildQuery does return terms query', function() {
-                    expect(element.buildQuery('terms', 'field', 'value').toJSON()).to.deep.equal(ejs.TermsQuery('field', 'value').toJSON());
-                });
-
-                test('buildQuery does return mlt query', function() {
-                    expect(element.buildQuery('mlt', 'field', 'value').toJSON()).to.deep.equal(ejs.MoreLikeThisQuery('field', 'value').toJSON());
-                });
-
-                test('buildBoolQuery does exist', function() {
-                    expect(element.buildBoolQuery).to.be.a('Function');
-                });
-
-                test('buildBoolQuery does return null if no queries are given', function() {
-                    expect(element.buildBoolQuery([])).to.be.null;
-                });
-
-                test('buildBoolQuery does return null if a bad bool function is given', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    expect(element.buildBoolQuery([query1, query2], 'test')).to.be.null;
-                });
-
-                test('buildBoolQuery does return bool query', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    expect(element.buildBoolQuery([query1, query2]).toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
-                });
-
-                test('buildBoolQuery does return bool query using given boolFunction', function() {
-                    var query1 = ejs.TermQuery('field1', 'value1');
-                    var query2 = ejs.TermQuery('field2', 'value2');
-                    expect(element.buildBoolQuery([query1, query2], 'should').toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
-                });
-
-                test('buildDateRangeQuery does exist', function() {
-                    expect(element.buildDateRangeQuery).to.be.a('Function');
-                });
-
-                test('buildDateRangeQuery does return null if no field is given', function() {
-                    expect(element.buildDateRangeQuery()).to.be.null;
-                });
-
-                test('buildDateRangeQuery does return range query with gte', function() {
-                    expect(element.buildDateRangeQuery('field', {
-                      greater: 'greater'
-                    }).toJSON()).to.deep.equal(ejs.RangeQuery('field').gte('greater').toJSON());
-                });
-
-                test('buildDateRangeQuery does return range query with lte', function() {
-                    expect(element.buildDateRangeQuery('field', {
-                      less: 'less'
-                    }).toJSON()).to.deep.equal(ejs.RangeQuery('field').lte('less').toJSON());
-                });
-
-                test('buildDateRangeQuery does return range query with gte and lte', function() {
-                    expect(element.buildDateRangeQuery('field', {
-                      greater: 'greater',
-                      less: 'less'
-                    }).toJSON()).to.deep.equal(ejs.RangeQuery('field').gte('greater').lte('less').toJSON());
-                });
-            });
-        </script>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../elastic-client-query-builder.html">
+  </head>
+  <body>
+    <test-fixture id="elastic-client-query-builder-fixture">
+      <template>
+        <elastic-client-query-builder>
+        </elastic-client-query-builder>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<elastic-client-query-builder> for match all', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'match_all';
+          element.fields = '';
+          element.values = '';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('match_all');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('');
+        });
+
+        test('term query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for match', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'match';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('match');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('match query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MatchQuery('testField', 'testValue').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for filtered match', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.filtered = true;
+          element.type = 'match';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.true;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('match');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('filter is set correctly', function() {
+          expect(element.ejsFilter).to.be.null;
+        });
+
+        test('query is not built if filter is not set', function() {
+          expect(element.ejsQuery).to.not.exist;
+        });
+
+        test('query is built once filter is set', function() {
+          var ejsFilter = ejs.TermFilter('filterField', 'filterValue');
+          element.ejsFilter = ejsFilter;
+          expect(element.ejsFilter).to.exist;
+          expect(element.ejsFilter.toJSON()).to.deep.equal(ejsFilter.toJSON());
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.FilteredQuery(ejs.MatchQuery('testField', 'testValue'), ejsFilter).toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for term', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'term';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('term');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('term query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for terms', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'terms';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('terms');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('terms query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for terms array', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'terms';
+          element.fields = 'testField';
+          element.values = ['testValue1', 'testValue2'];
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('terms');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.be.an('Array');
+          expect(element.values).to.deep.equal(['testValue1', 'testValue2']);
+        });
+
+        test('terms query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', ['testValue1', 'testValue2']).toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for terms with one value', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'terms';
+          element.fields = 'testField';
+          element.values = ['testValue'];
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('terms');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.be.an('Array');
+          expect(element.values).to.deep.equal(['testValue']);
+        });
+
+        test('terms query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermsQuery('testField', 'testValue').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for bool with must clauses', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'bool';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type and boolFunction are set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('bool');
+          expect(element.boolFunction).to.exist;
+          expect(element.boolFunction).to.equal('must');
+        });
+
+        test('query is not built if bool queries are not set', function() {
+          expect(element.ejsQuery).to.not.exist;
+        });
+
+        test('query is built once bool queries are set', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          element.ejsBoolQueries = [query1, query2];
+          expect(element.ejsBoolQueries).to.exist;
+          expect(element.ejsBoolQueries).to.be.an('Array');
+          expect(element.ejsBoolQueries.length).to.equal(2);
+          expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+          expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
+        });
+
+        test('query does not use fields or values properties', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          element.fields = ['field3', 'field4'];
+          element.values = ['value3', 'value4'];
+          element.ejsBoolQueries = [query1, query2];
+          expect(element.ejsBoolQueries).to.exist;
+          expect(element.ejsBoolQueries).to.be.an('Array');
+          expect(element.ejsBoolQueries.length).to.equal(2);
+          expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+          expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for bool with should clauses', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'bool';
+          element.boolFunction = 'should';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type and boolFunction are set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('bool');
+          expect(element.boolFunction).to.exist;
+          expect(element.boolFunction).to.equal('should');
+        });
+
+        test('query is not built if bool queries are not set', function() {
+          expect(element.ejsQuery).to.not.exist;
+        });
+
+        test('query is built once bool queries are set', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          element.ejsBoolQueries = [query1, query2];
+          expect(element.ejsBoolQueries).to.exist;
+          expect(element.ejsBoolQueries).to.be.an('Array');
+          expect(element.ejsBoolQueries.length).to.equal(2);
+          expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+          expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
+        });
+
+        test('query does not use fields or values properties', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          element.fields = ['field3', 'field4'];
+          element.values = ['value3', 'value4'];
+          element.ejsBoolQueries = [query1, query2];
+          expect(element.ejsBoolQueries).to.exist;
+          expect(element.ejsBoolQueries).to.be.an('Array');
+          expect(element.ejsBoolQueries.length).to.equal(2);
+          expect(element.ejsBoolQueries[0].toJSON()).to.deep.equal(query1.toJSON());
+          expect(element.ejsBoolQueries[1].toJSON()).to.deep.equal(query2.toJSON());
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for no values', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'term';
+          element.fields = 'testField';
+          element.values = '';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('term');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('');
+        });
+
+        test('query is not built', function() {
+          expect(element.ejsQuery).to.be.null;
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+
+        test('setting values does build query', function() {
+          element.values = 'testValue';
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.TermQuery('testField', 'testValue').toJSON());
+        });
+      });
+
+      suite('<elastic-client-query-builder> for more-like-this query', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'mlt';
+          element.fields = ['testField'];
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('mlt');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.deep.equal(['testField']);
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('mltConfig is empty', function() {
+          expect(element.mltConfig).to.deep.equal({});
+        });
+
+        test('more-like-this query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.MoreLikeThisQuery(['testField'], 'testValue').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for more-like-this query with config', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'mlt';
+          element.mltConfig = {
+            minTermFreq: 2,
+            maxQueryTerms: 50,
+            stopWords: 'testStopWord',
+            minDocFreq: 1,
+            maxDocFreq: 100,
+            analyzer: 'testAnalyzer',
+            minimumShouldMatch: '50%',
+            boostTerms: 3,
+            include: true,
+            boost: 1.5
+          };
+          element.fields = ['testField'];
+          element.values = 'testValue';
+          flush(function() {
+            done();
+          });
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('mlt');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.deep.equal(['testField']);
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.deep.equal('testValue');
+        });
+
+        test('mltConfig is set correctly', function() {
+          expect(element.mltConfig).to.exist;
+          expect(element.mltConfig).to.deep.equal({
+            minTermFreq: 2,
+            maxQueryTerms: 50,
+            stopWords: 'testStopWord',
+            minDocFreq: 1,
+            maxDocFreq: 100,
+            analyzer: 'testAnalyzer',
+            minimumShouldMatch: '50%',
+            boostTerms: 3,
+            include: true,
+            boost: 1.5
+          });
+        });
+
+        test('more-like-this query is built correctly with config', function() {
+          expect(element.ejsQuery).to.exist;
+          var expected = ejs.MoreLikeThisQuery(['testField'], 'testValue')
+            .minTermFreq(2)
+            .maxQueryTerms(50)
+            .stopWords('testStopWord')
+            .minDocFreq(1)
+            .maxDocFreq(100)
+            .analyzer('testAnalyzer')
+            .minimumShouldMatch('50%')
+            .boostTerms(3)
+            .include(true)
+            .boost(1.5);
+          expect(element.ejsQuery.toJSON()).to.deep.equal(expected.toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> public function tests', function() {
+        var element;
+
+        setup(function() {
+          element = fixture('elastic-client-query-builder-fixture');
+        });
+
+        test('buildQuery does exist', function() {
+          expect(element.buildQuery).to.be.a('Function');
+        });
+
+        test('buildQuery does return match all query', function() {
+          expect(element.buildQuery('match_all').toJSON()).to.deep.equal(ejs.MatchAllQuery().toJSON());
+        });
+
+        test('buildQuery does return null if type is not match all and fields are undefined', function() {
+          expect(element.buildQuery('match')).to.be.null;
+        });
+
+        test('buildQuery does return null if type is not match all and values are undefined', function() {
+          expect(element.buildQuery('match', 'field')).to.be.null;
+        });
+
+        test('buildQuery does return match query', function() {
+          expect(element.buildQuery('match', 'field', 'value').toJSON()).to.deep.equal(ejs.MatchQuery('field', 'value').toJSON());
+        });
+
+        test('buildQuery does return term query', function() {
+          expect(element.buildQuery('term', 'field', 'value').toJSON()).to.deep.equal(ejs.TermQuery('field', 'value').toJSON());
+        });
+
+        test('buildQuery does return terms query', function() {
+          expect(element.buildQuery('terms', 'field', 'value').toJSON()).to.deep.equal(ejs.TermsQuery('field', 'value').toJSON());
+        });
+
+        test('buildQuery does return mlt query', function() {
+          expect(element.buildQuery('mlt', 'field', 'value').toJSON()).to.deep.equal(ejs.MoreLikeThisQuery('field', 'value').toJSON());
+        });
+
+        test('buildBoolQuery does exist', function() {
+          expect(element.buildBoolQuery).to.be.a('Function');
+        });
+
+        test('buildBoolQuery does return null if no queries are given', function() {
+          expect(element.buildBoolQuery([])).to.be.null;
+        });
+
+        test('buildBoolQuery does return null if a bad bool function is given', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          expect(element.buildBoolQuery([query1, query2], 'test')).to.be.null;
+        });
+
+        test('buildBoolQuery does return bool query', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          expect(element.buildBoolQuery([query1, query2]).toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).toJSON());
+        });
+
+        test('buildBoolQuery does return bool query using given boolFunction', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          expect(element.buildBoolQuery([query1, query2], 'should').toJSON()).to.deep.equal(ejs.BoolQuery().minimumNumberShouldMatch(1).should(query1).should(query2).toJSON());
+        });
+
+        test('buildDateRangeQuery does exist', function() {
+          expect(element.buildDateRangeQuery).to.be.a('Function');
+        });
+
+        test('buildDateRangeQuery does return null if no field is given', function() {
+          expect(element.buildDateRangeQuery()).to.be.null;
+        });
+
+        test('buildDateRangeQuery does return range query with gte', function() {
+          expect(element.buildDateRangeQuery('field', {
+            greater: 'greater'
+          }).toJSON()).to.deep.equal(ejs.RangeQuery('field').gte('greater').toJSON());
+        });
+
+        test('buildDateRangeQuery does return range query with lte', function() {
+          expect(element.buildDateRangeQuery('field', {
+            less: 'less'
+          }).toJSON()).to.deep.equal(ejs.RangeQuery('field').lte('less').toJSON());
+        });
+
+        test('buildDateRangeQuery does return range query with gte and lte', function() {
+          expect(element.buildDateRangeQuery('field', {
+            greater: 'greater',
+            less: 'less'
+          }).toJSON()).to.deep.equal(ejs.RangeQuery('field').gte('greater').lte('less').toJSON());
+        });
+      });
+    </script>
+  </body>
 </html>

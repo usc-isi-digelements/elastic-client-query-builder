@@ -34,333 +34,333 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
 -->
 
 <dom-module id="elastic-client-query-builder">
-    <template>
-    </template>
+  <template>
+  </template>
 
-    <script>
-        (function() {
-            Polymer({
-                is: 'elastic-client-query-builder',
+  <script>
+    (function() {
+      Polymer({
+        is: 'elastic-client-query-builder',
 
-                properties: {
-                    /**
-                     * (Required)
-                     *
-                     * The string field or array of fields for the query.
-                     *
-                     * @type {String|Array}
-                     */
-                    fields: {
-                        type: Array
-                    },
+        properties: {
+          /**
+           * (Required)
+           *
+           * The string field or array of fields for the query.
+           *
+           * @type {String|Array}
+           */
+          fields: {
+            type: Array
+          },
 
-                    /**
-                     * (Required)
-                     *
-                     * The string value or array of values for the query.  For more-like-this queries, the value for the 'like' property.
-                     *
-                     * @type {String|Array}
-                     */
-                    values: {
-                        type: Array
-                    },
+          /**
+           * (Required)
+           *
+           * The string value or array of values for the query.  For more-like-this queries, the value for the 'like' property.
+           *
+           * @type {String|Array}
+           */
+          values: {
+            type: Array
+          },
 
-                    /**
-                     * (Required)
-                     *
-                     * The type of query to build.
-                     * Supported types:
-                     * 'bool', 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
-                     *
-                     * @type {String}
-                     */
-                    type: {
-                        type: String
-                    },
+          /**
+           * (Required)
+           *
+           * The type of query to build.
+           * Supported types:
+           * 'bool', 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
+           *
+           * @type {String}
+           */
+          type: {
+            type: String
+          },
 
-                    /**
-                     * (Optional)
-                     *
-                     * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'fields', and 'values'.
-                     *
-                     * @type {Boolean}
-                     * @default false
-                     */
-                    filtered: {
-                        type: Boolean,
-                        value: false
-                    },
+          /**
+           * (Optional)
+           *
+           * Whether to build a filtered query.  If true, the query will be built using 'ejsFilter' and an elasticjs query built using 'type', 'fields', and 'values'.
+           *
+           * @type {Boolean}
+           * @default false
+           */
+          filtered: {
+            type: Boolean,
+            value: false
+          },
 
-                    /**
-                     * (Optional)
-                     *
-                     * The elasticjs filter for a filtered query.  Only used if the filtered property is true.
-                     *
-                     * @type {Object}
-                     * @default null
-                     */
-                    ejsFilter: {
-                        type: Object,
-                        value: function() {
-                            return null;
-                        }
-                    },
+          /**
+           * (Optional)
+           *
+           * The elasticjs filter for a filtered query.  Only used if the filtered property is true.
+           *
+           * @type {Object}
+           * @default null
+           */
+          ejsFilter: {
+            type: Object,
+            value: function() {
+              return null;
+            }
+          },
 
-                    /**
-                     * (Optional)
-                     *
-                     * The array of elasticjs query objects to use with this elasticsearch bool query.  Only used if type is set to bool.
-                     *
-                     * @type {Array}
-                     * @default []
-                     */
-                    ejsBoolQueries: {
-                        type: Array,
-                        value: function() {
-                            return [];
-                        }
-                    },
+          /**
+           * (Optional)
+           *
+           * The array of elasticjs query objects to use with this elasticsearch bool query.  Only used if type is set to bool.
+           *
+           * @type {Array}
+           * @default []
+           */
+          ejsBoolQueries: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          },
 
-                    /**
-                     * (Optional)
-                     * Whether the bool query either 'must' or 'should' match the given queries.  Only used if type is set to bool.
-                     *
-                     * @type {String}
-                     * @default 'must'
-                     */
-                    boolFunction: {
-                        type: String,
-                        value: 'must'
-                    },
+          /**
+           * (Optional)
+           * Whether the bool query either 'must' or 'should' match the given queries.  Only used if type is set to bool.
+           *
+           * @type {String}
+           * @default 'must'
+           */
+          boolFunction: {
+            type: String,
+            value: 'must'
+          },
 
-                    /**
-                     * (Optional)
-                     *
-                     * The object with properties for configuration options of mlt (more-like-this) queries.
-                     * Supported properties:
-                     * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer', 'minimumShouldMatch', 'boostTerms', 'include', 'boost'
-                     *
-                     * @type {Object}
-                     * @default {}
-                     */
-                    mltConfig: {
-                        type: Object,
-                        value: function() {
-                            return {};
-                        }
-                    },
+          /**
+           * (Optional)
+           *
+           * The object with properties for configuration options of mlt (more-like-this) queries.
+           * Supported properties:
+           * 'minTermFreq', 'maxQueryTerms', 'stopWords', 'minDocFreq', 'maxDocFreq', 'analyzer', 'minimumShouldMatch', 'boostTerms', 'include', 'boost'
+           *
+           * @type {Object}
+           * @default {}
+           */
+          mltConfig: {
+            type: Object,
+            value: function() {
+              return {};
+            }
+          },
 
-                    /**
-                     * (Output)
-                     *
-                     * The built elasticjs query.
-                     *
-                     * @type {Object}
-                     */
-                    ejsQuery: {
-                        type: Object,
-                        readOnly: true,
-                        notify: true
-                    }
-                },
+          /**
+           * (Output)
+           *
+           * The built elasticjs query.
+           *
+           * @type {Object}
+           */
+          ejsQuery: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          }
+        },
 
-                observers : [
-                    '_buildUnfilteredQuery(type, fields, values, filtered)',
-                    '_buildFilteredQuery(type, fields, values, filtered, ejsFilter)',
-                    '_buildBoolQuery(type, ejsBoolQueries)'
-                ],
+        observers : [
+          '_buildUnfilteredQuery(type, fields, values, filtered)',
+          '_buildFilteredQuery(type, fields, values, filtered, ejsFilter)',
+          '_buildBoolQuery(type, ejsBoolQueries)'
+        ],
 
-                /**
-                 * Builds and returns an elasticjs query object using the given type, fields, and values.
-                 *
-                 * @param {String} type
-                 * @param {String|Array} fields
-                 * @param {String|Array} values
-                 * @param {Object} mltConfig
-                 * @return {Object}
-                 */
-                buildQuery: function(type, fields, values, mltConfig) {
-                    var ejsQuery;
-                    if(type === 'match_all') {
-                        ejsQuery = ejs.MatchAllQuery();
-                    }
-                    else if(!values || (values.constructor === Array && !values.length)) {
-                        return null;
-                    }
-                    else if(fields) {
-                        var queryField = (fields.constructor === Array && fields.length === 1) ? fields[0] : fields;
-                        var queryValue = (values.constructor === Array && values.length === 1) ? values[0] : values;
-                        if(type === 'match') {
-                            ejsQuery = ejs.MatchQuery(queryField, queryValue);
-                        }
-                        if(type === 'term') {
-                            ejsQuery = ejs.TermQuery(queryField, queryValue);
-                        }
-                        if(type === 'terms') {
-                            ejsQuery = ejs.TermsQuery(queryField, queryValue);
-                        }
-                        if(type === 'mlt') {
-                            ejsQuery = this._buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), mltConfig);
-                        }
-                    }
-                    return ejsQuery;
-                },
+        /**
+         * Builds and returns an elasticjs query object using the given type, fields, and values.
+         *
+         * @param {String} type
+         * @param {String|Array} fields
+         * @param {String|Array} values
+         * @param {Object} mltConfig
+         * @return {Object}
+         */
+        buildQuery: function(type, fields, values, mltConfig) {
+          var ejsQuery;
+          if(type === 'match_all') {
+            ejsQuery = ejs.MatchAllQuery();
+          }
+          else if(!values || (values.constructor === Array && !values.length)) {
+            return null;
+          }
+          else if(fields) {
+            var queryField = (fields.constructor === Array && fields.length === 1) ? fields[0] : fields;
+            var queryValue = (values.constructor === Array && values.length === 1) ? values[0] : values;
+            if(type === 'match') {
+              ejsQuery = ejs.MatchQuery(queryField, queryValue);
+            }
+            if(type === 'term') {
+              ejsQuery = ejs.TermQuery(queryField, queryValue);
+            }
+            if(type === 'terms') {
+              ejsQuery = ejs.TermsQuery(queryField, queryValue);
+            }
+            if(type === 'mlt') {
+              ejsQuery = this._buildMoreLikeThisQuery(ejs.MoreLikeThisQuery(fields, values), mltConfig);
+            }
+          }
+          return ejsQuery;
+        },
 
-                /**
-                 * Builds and returns the elasticjs query object for a bool query.
-                 *
-                 * @param {Array} ejsBoolQueries
-                 * @param {String} boolFunction Either 'must' or 'should' or undefined (defaults to 'must')
-                 * @return {Object}
-                 */
-                buildBoolQuery: function(ejsBoolQueries, boolFunction) {
-                    if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'should' || !boolFunction)) {
-                        var ejsQuery = ejs.BoolQuery();
-                        if(boolFunction === 'should') {
-                            ejsQuery.minimumNumberShouldMatch(1);
-                        }
+        /**
+         * Builds and returns the elasticjs query object for a bool query.
+         *
+         * @param {Array} ejsBoolQueries
+         * @param {String} boolFunction Either 'must' or 'should' or undefined (defaults to 'must')
+         * @return {Object}
+         */
+        buildBoolQuery: function(ejsBoolQueries, boolFunction) {
+          if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'should' || !boolFunction)) {
+            var ejsQuery = ejs.BoolQuery();
+            if(boolFunction === 'should') {
+              ejsQuery.minimumNumberShouldMatch(1);
+            }
 
-                        ejsBoolQueries.forEach(function(query) {
-                            if(boolFunction === 'should') {
-                                ejsQuery.should(query);
-                            } else {
-                                ejsQuery.must(query);
-                            }
-                        });
-
-                        return ejsQuery;
-                    }
-
-                    return null;
-                },
-
-                /**
-                 * Builds and returns the elasticjs query object for a date range query.
-                 *
-                 * @param {String} field
-                 * @param {Object} config Object with 'greater' and/or 'less' property
-                 * @return {Object}
-                 */
-                buildDateRangeQuery: function(field, config) {
-                    if(field) {
-                        var ejsQuery = ejs.RangeQuery(field);
-
-                        if(config.greater) {
-                            ejsQuery.gte(config.greater);
-                        }
-
-                        if(config.less) {
-                            ejsQuery.lte(config.less);
-                        }
-
-                        return ejsQuery;
-                    }
-
-                    return null;
-                },
-
-                /**
-                 * Builds and returns a more-like-this elasticjs query object using the given elasticjs query object and more-like-this configuration object.
-                 *
-                 * @param {Object} ejsQuery
-                 * @param {Object} mltConfig
-                 * @return {Object}
-                 * @private
-                 */
-                _buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
-                    var mltQuery = ejsQuery;
-                    if(mltConfig) {
-                        if(mltConfig.minTermFreq) {
-                            mltQuery = mltQuery.minTermFreq(mltConfig.minTermFreq);
-                        }
-                        if(mltConfig.maxQueryTerms) {
-                            mltQuery = mltQuery.maxQueryTerms(mltConfig.maxQueryTerms);
-                        }
-                        if(mltConfig.stopWords) {
-                            mltQuery = mltQuery.stopWords(mltConfig.stopWords);
-                        }
-                        if(mltConfig.minDocFreq) {
-                            mltQuery = mltQuery.minDocFreq(mltConfig.minDocFreq);
-                        }
-                        if(mltConfig.maxDocFreq) {
-                            mltQuery = mltQuery.maxDocFreq(mltConfig.maxDocFreq);
-                        }
-                        if(mltConfig.analyzer) {
-                            mltQuery = mltQuery.analyzer(mltConfig.analyzer);
-                        }
-                        if(mltConfig.minimumShouldMatch) {
-                            mltQuery = mltQuery.minimumShouldMatch(mltConfig.minimumShouldMatch);
-                        }
-                        if(mltConfig.boostTerms) {
-                            mltQuery = mltQuery.boostTerms(mltConfig.boostTerms);
-                        }
-                        if(mltConfig.include) {
-                            mltQuery = mltQuery.include(mltConfig.include);
-                        }
-                        if(mltConfig.boost) {
-                            mltQuery = mltQuery.boost(mltConfig.boost);
-                        }
-                    }
-                    return mltQuery;
-                },
-
-                /**
-                 * Builds and sets the elasticjs query object for an unfiltered query.
-                 *
-                 * @param {String} type
-                 * @param {String|Array} fields
-                 * @param {String|Array} values
-                 * @param {Boolean} filtered
-                 * @private
-                 */
-                _buildUnfilteredQuery: function(type, fields, values, filtered) {
-                    if(filtered) {
-                        return;
-                    }
-                    var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
-                    if(ejsQuery || ejsQuery === null) {
-                        this._setEjsQuery(ejsQuery);
-                    }
-                },
-
-                /**
-                 * Builds and sets the elasticjs query object for a filtered query.
-                 *
-                 * @param {String} type
-                 * @param {String|Array} fields
-                 * @param {String|Array} values
-                 * @param {Boolean} filtered
-                 * @param {Object} ejsFilter
-                 * @private
-                 */
-                _buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
-                    if(!filtered || !ejsFilter) {
-                        return;
-                    }
-                    var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
-                    if(ejsQuery) {
-                        this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
-                    }
-                    if(ejsQuery === null) {
-                        this._setEjsQuery(null);
-                    }
-                },
-
-                /**
-                 * Builds and sets the elasticjs query object for a bool query.
-                 *
-                 * @param {String} type
-                 * @param {Array} ejsBoolQueries
-                 * @private
-                 */
-                _buildBoolQuery: function(type, ejsBoolQueries) {
-                    if(type === 'bool') {
-                        var ejsQuery = this.buildBoolQuery(ejsBoolQueries, this.boolFunction);
-
-                        this._setEjsQuery(ejsQuery);
-                    }
-                }
+            ejsBoolQueries.forEach(function(query) {
+              if(boolFunction === 'should') {
+                ejsQuery.should(query);
+              } else {
+                ejsQuery.must(query);
+              }
             });
-        })();
-    </script>
+
+            return ejsQuery;
+          }
+
+          return null;
+        },
+
+        /**
+         * Builds and returns the elasticjs query object for a date range query.
+         *
+         * @param {String} field
+         * @param {Object} config Object with 'greater' and/or 'less' property
+         * @return {Object}
+         */
+        buildDateRangeQuery: function(field, config) {
+          if(field) {
+            var ejsQuery = ejs.RangeQuery(field);
+
+            if(config.greater) {
+              ejsQuery.gte(config.greater);
+            }
+
+            if(config.less) {
+              ejsQuery.lte(config.less);
+            }
+
+            return ejsQuery;
+          }
+
+          return null;
+        },
+
+        /**
+         * Builds and returns a more-like-this elasticjs query object using the given elasticjs query object and more-like-this configuration object.
+         *
+         * @param {Object} ejsQuery
+         * @param {Object} mltConfig
+         * @return {Object}
+         * @private
+         */
+        _buildMoreLikeThisQuery: function(ejsQuery, mltConfig) {
+          var mltQuery = ejsQuery;
+          if(mltConfig) {
+            if(mltConfig.minTermFreq) {
+              mltQuery = mltQuery.minTermFreq(mltConfig.minTermFreq);
+            }
+            if(mltConfig.maxQueryTerms) {
+              mltQuery = mltQuery.maxQueryTerms(mltConfig.maxQueryTerms);
+            }
+            if(mltConfig.stopWords) {
+              mltQuery = mltQuery.stopWords(mltConfig.stopWords);
+            }
+            if(mltConfig.minDocFreq) {
+              mltQuery = mltQuery.minDocFreq(mltConfig.minDocFreq);
+            }
+            if(mltConfig.maxDocFreq) {
+              mltQuery = mltQuery.maxDocFreq(mltConfig.maxDocFreq);
+            }
+            if(mltConfig.analyzer) {
+              mltQuery = mltQuery.analyzer(mltConfig.analyzer);
+            }
+            if(mltConfig.minimumShouldMatch) {
+              mltQuery = mltQuery.minimumShouldMatch(mltConfig.minimumShouldMatch);
+            }
+            if(mltConfig.boostTerms) {
+              mltQuery = mltQuery.boostTerms(mltConfig.boostTerms);
+            }
+            if(mltConfig.include) {
+              mltQuery = mltQuery.include(mltConfig.include);
+            }
+            if(mltConfig.boost) {
+              mltQuery = mltQuery.boost(mltConfig.boost);
+            }
+          }
+          return mltQuery;
+        },
+
+        /**
+         * Builds and sets the elasticjs query object for an unfiltered query.
+         *
+         * @param {String} type
+         * @param {String|Array} fields
+         * @param {String|Array} values
+         * @param {Boolean} filtered
+         * @private
+         */
+        _buildUnfilteredQuery: function(type, fields, values, filtered) {
+          if(filtered) {
+            return;
+          }
+          var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
+          if(ejsQuery || ejsQuery === null) {
+            this._setEjsQuery(ejsQuery);
+          }
+        },
+
+        /**
+         * Builds and sets the elasticjs query object for a filtered query.
+         *
+         * @param {String} type
+         * @param {String|Array} fields
+         * @param {String|Array} values
+         * @param {Boolean} filtered
+         * @param {Object} ejsFilter
+         * @private
+         */
+        _buildFilteredQuery: function(type, fields, values, filtered, ejsFilter) {
+          if(!filtered || !ejsFilter) {
+            return;
+          }
+          var ejsQuery = this.buildQuery(type, fields, values, this.mltConfig);
+          if(ejsQuery) {
+            this._setEjsQuery(ejs.FilteredQuery(ejsQuery, ejsFilter));
+          }
+          if(ejsQuery === null) {
+            this._setEjsQuery(null);
+          }
+        },
+
+        /**
+         * Builds and sets the elasticjs query object for a bool query.
+         *
+         * @param {String} type
+         * @param {Array} ejsBoolQueries
+         * @private
+         */
+        _buildBoolQuery: function(type, ejsBoolQueries) {
+          if(type === 'bool') {
+            var ejsQuery = this.buildBoolQuery(ejsBoolQueries, this.boolFunction);
+
+            this._setEjsQuery(ejsQuery);
+          }
+        }
+      });
+    })();
+  </script>
 </dom-module>
