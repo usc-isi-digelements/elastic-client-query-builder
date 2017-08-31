@@ -23,29 +23,30 @@ limitations under the License.
     <link rel="import" href="../elastic-client-query-builder.html">
   </head>
   <body unresolved>
-    <template is="dom-bind" id="demo">
-      <p>Field: 'myField'</p>
-      <p>Value: 'myValue'</p>
-      <p>Type: 'terms'</p>
+    <dom-bind>
+      <script>
+        (function(document) {
+          var domBind = document.querySelector('dom-bind');
 
-      <elastic-client-query-builder
-        fields='"myField"'
-        values='"myValue"'
-        type="term"
-        ejs-query="{{query}}">
-      </elastic-client-query-builder>
+          domBind.toJSON = function(ejs) {
+            return JSON.stringify(ejs);
+          };
+        })(document);
+      </script>
+      <template is="dom-bind" id="demo">
+        <p>Field: 'myField'</p>
+        <p>Value: 'myValue'</p>
+        <p>Type: 'terms'</p>
 
-      <p><span>ElasticJS query: </span>{{toJSON(query)}}</p>
-    </template>
+        <elastic-client-query-builder
+          fields='"myField"'
+          values='"myValue"'
+          type="term"
+          ejs-query="{{query}}">
+        </elastic-client-query-builder>
 
-    <script>
-      (function(document) {
-        var demo = document.querySelector('#demo');
-
-        demo.toJSON = function(ejs) {
-          return JSON.stringify(ejs);
-        };
-      })(document);
-    </script>
+        <p><span>ElasticJS query: </span>{{toJSON(query)}}</p>
+      </template>
+    </dom-bind>
   </body>
 </html>
