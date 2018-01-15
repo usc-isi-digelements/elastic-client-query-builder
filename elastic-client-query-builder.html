@@ -123,7 +123,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
 
           /**
            * (Optional)
-           * Whether the bool query either 'must' or 'should' match the given queries.  Only used if type is set to bool.
+           * Whether the bool query either 'must', 'must_not', or 'should' match the given queries.  Only used if type is set to bool.
            *
            * @type {String}
            * @default 'must'
@@ -210,11 +210,11 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
          * Builds and returns the elasticjs query object for a bool query.
          *
          * @param {Array} ejsBoolQueries
-         * @param {String} boolFunction Either 'must' or 'should' or undefined (defaults to 'must')
+         * @param {String} boolFunction Either 'must', 'must_not', or 'should' or undefined (defaults to 'must')
          * @return {Object}
          */
         buildBoolQuery: function(ejsBoolQueries, boolFunction) {
-          if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'should' || !boolFunction)) {
+          if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'must_not' || boolFunction === 'should' || !boolFunction)) {
             var ejsQuery = ejs.BoolQuery();
             if(boolFunction === 'should') {
               ejsQuery.minimumNumberShouldMatch(1);
@@ -223,6 +223,8 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
             ejsBoolQueries.forEach(function(query) {
               if(boolFunction === 'should') {
                 ejsQuery.should(query);
+              } else if(boolFunction === 'must_not') {
+                ejsQuery.mustNot(query);
               } else {
                 ejsQuery.must(query);
               }
