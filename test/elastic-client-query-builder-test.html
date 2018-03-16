@@ -72,6 +72,47 @@ limitations under the License.
         });
       });
 
+      suite('<elastic-client-query-builder> for contains', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'contains';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(done);
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('contains');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('contains query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.RegexpQuery('testField', '.*testValue.*').toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
       suite('<elastic-client-query-builder> for match', function() {
         var element;
 
@@ -160,6 +201,47 @@ limitations under the License.
           expect(element.ejsFilter.toJSON()).to.deep.equal(ejsFilter.toJSON());
           expect(element.ejsQuery).to.exist;
           expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.FilteredQuery(ejs.MatchQuery('testField', 'testValue'), ejsFilter).toJSON());
+        });
+
+        test('does not have html content', function() {
+          expect(Polymer.dom(element.root).children.length).to.equal(0);
+        });
+      });
+
+      suite('<elastic-client-query-builder> for regex', function() {
+        var element;
+
+        setup(function(done) {
+          element = fixture('elastic-client-query-builder-fixture');
+          element.type = 'regex';
+          element.fields = 'testField';
+          element.values = 'testValue';
+          flush(done);
+        });
+
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
+        test('type is set correctly', function() {
+          expect(element.type).to.exist;
+          expect(element.type).to.equal('regex');
+        });
+
+        test('fields is set correctly', function() {
+          expect(element.fields).to.exist;
+          expect(element.fields).to.equal('testField');
+        });
+
+        test('values is set correctly', function() {
+          expect(element.values).to.exist;
+          expect(element.values).to.equal('testValue');
+        });
+
+        test('regex query is built correctly', function() {
+          expect(element.ejsQuery).to.exist;
+          expect(element.ejsQuery.toJSON()).to.deep.equal(ejs.RegexpQuery('testField', 'testValue').toJSON());
         });
 
         test('does not have html content', function() {
@@ -663,8 +745,16 @@ limitations under the License.
           expect(element.buildQuery('match', 'field')).to.be.null;
         });
 
+        test('buildQuery does return contains query', function() {
+          expect(element.buildQuery('contains', 'field', 'value').toJSON()).to.deep.equal(ejs.RegexpQuery('field', '.*value.*').toJSON());
+        });
+
         test('buildQuery does return match query', function() {
           expect(element.buildQuery('match', 'field', 'value').toJSON()).to.deep.equal(ejs.MatchQuery('field', 'value').toJSON());
+        });
+
+        test('buildQuery does return regex query', function() {
+          expect(element.buildQuery('regex', 'field', 'value').toJSON()).to.deep.equal(ejs.RegexpQuery('field', 'value').toJSON());
         });
 
         test('buildQuery does return term query', function() {

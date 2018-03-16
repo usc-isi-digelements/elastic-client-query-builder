@@ -70,7 +70,7 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
            *
            * The type of query to build.
            * Supported types:
-           * 'bool', 'match_all', 'match', 'term', 'terms', 'mlt' (more-like-this)
+           * 'bool', 'match_all', 'match', 'regex', 'term', 'terms', 'mlt' (more-like-this), 'contains' (a regex query adding '.*' as both a prefix and a suffix to the query value)
            *
            * @type {String}
            */
@@ -190,8 +190,14 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
           else if(fields) {
             var queryField = (fields.constructor === Array && fields.length === 1) ? fields[0] : fields;
             var queryValue = (values.constructor === Array && values.length === 1) ? values[0] : values;
+            if(type === 'contains') {
+              ejsQuery = ejs.RegexpQuery(queryField, '.*' + queryValue + '.*');
+            }
             if(type === 'match') {
               ejsQuery = ejs.MatchQuery(queryField, queryValue);
+            }
+            if(type === 'regex') {
+              ejsQuery = ejs.RegexpQuery(queryField, queryValue);
             }
             if(type === 'term') {
               ejsQuery = ejs.TermQuery(queryField, queryValue);
