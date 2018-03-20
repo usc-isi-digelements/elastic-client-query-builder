@@ -217,11 +217,12 @@ A Polymer Element which builds an elasticjs query based on the set attributes.
          *
          * @param {Array} ejsBoolQueries
          * @param {String} boolFunction Either 'must', 'must_not', or 'should' or undefined (defaults to 'must')
+         * @param {String} boolQuery (Optional) The bool query to extend.  If undefined, creates a new bool query.
          * @return {Object}
          */
-        buildBoolQuery: function(ejsBoolQueries, boolFunction) {
+        buildBoolQuery: function(ejsBoolQueries, boolFunction, boolQuery) {
           if(ejsBoolQueries.length && (boolFunction === 'must' || boolFunction === 'must_not' || boolFunction === 'should' || !boolFunction)) {
-            var ejsQuery = ejs.BoolQuery();
+            var ejsQuery = boolQuery || ejs.BoolQuery();
             if(boolFunction === 'should') {
               ejsQuery.minimumNumberShouldMatch(1);
             }

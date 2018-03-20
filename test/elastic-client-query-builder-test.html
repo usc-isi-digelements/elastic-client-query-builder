@@ -577,6 +577,11 @@ limitations under the License.
           flush(done);
         });
 
+        test('filtered is set correctly', function() {
+          expect(element.filtered).to.exist;
+          expect(element.filtered).to.be.false;
+        });
+
         test('type is set correctly', function() {
           expect(element.type).to.exist;
           expect(element.type).to.equal('term');
@@ -799,6 +804,15 @@ limitations under the License.
           var query1 = ejs.TermQuery('field1', 'value1');
           var query2 = ejs.TermQuery('field2', 'value2');
           expect(element.buildBoolQuery([query1, query2], 'must_not').toJSON()).to.deep.equal(ejs.BoolQuery().mustNot(query1).mustNot(query2).toJSON());
+        });
+
+        test('buildBoolQuery does extend given bool query', function() {
+          var query1 = ejs.TermQuery('field1', 'value1');
+          var query2 = ejs.TermQuery('field2', 'value2');
+          var query3 = ejs.TermQuery('field3', 'value3');
+          var query4 = ejs.TermQuery('field4', 'value4');
+          var boolQuery = element.buildBoolQuery([query1, query2]);
+          expect(element.buildBoolQuery([query3, query4], 'should', boolQuery).toJSON()).to.deep.equal(ejs.BoolQuery().must(query1).must(query2).minimumNumberShouldMatch(1).should(query3).should(query4).toJSON());
         });
 
         test('buildDateRangeQuery does exist', function() {
