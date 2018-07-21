@@ -10,14 +10,14 @@
     "elastic.js"
   ],
   "main": "elastic-client-query-builder.html",
-  "homepage": "https://github.com/DigElements/elastic-client-query-builder/",
+  "homepage": "https://github.com/usc-isi-digelements/elastic-client-query-builder/",
   "ignore": [
     "/.*",
     "/test/"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "elasticjs-import": "DigElements/elasticjs-import#~1.0.0"
+    "elasticjs-import": "usc-isi-digelements/elasticjs-import#~1.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
